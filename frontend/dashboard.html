@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | CampusPulse</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <a href="index.html" class="logo">
+            <span class="logo-mark">CP</span>
+            <span>CampusPulse</span>
+        </a>
+
+        <nav class="nav-links">
+            <a href="#overview">Overview</a>
+            <a href="#academics">Academics</a>
+            <a href="#experience">Experience</a>
+            <a href="#insights">Insights</a>
+        </nav>
+
+        <a href="upload.html" class="nav-button">
+            New Dataset
+        </a>
+
+    </header>
+
+
+    <!-- DASHBOARD -->
+
+    <main class="dashboard-page">
+
+        <!-- HEADER -->
+
+        <section class="dashboard-header">
+
+            <div>
+
+                <p class="section-tag">
+                    CAMPUSPULSE ANALYTICS
+                </p>
+
+                <h1>
+                    College Placement
+                    <span>Dashboard</span>
+                </h1>
+
+                <p class="dashboard-description">
+                    Explore placement performance, academic trends,
+                    internship impact and salary statistics.
+                </p>
+
+            </div>
+
+
+            <div class="dataset-info">
+
+                <span class="status-dot"></span>
+
+                <div>
+                    <p>Dataset</p>
+                    <strong>student_placement.csv</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- OVERVIEW -->
+
+        <section id="overview">
+
+            <div class="dashboard-section-heading">
+
+                <div>
+                    <p class="section-tag">OVERVIEW</p>
+
+                    <h2>
+                        Placement at a glance
+                    </h2>
+                </div>
+
+            </div>
+
+
+            <div class="stat-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        👥
+                    </div>
+
+                    <p>Total Students</p>
+
+                    <h3 id="totalStudents">
+                        10,000
+                    </h3>
+
+                    <span class="stat-label">
+                        Students analyzed
+                    </span>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ✓
+                    </div>
+
+                    <p>Placement Rate</p>
+
+                    <h3 id="placementRate">
+                        72.4%
+                    </h3>
+
+                    <span class="stat-label positive">
+                        Overall placement
+                    </span>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ★
+                    </div>
+
+                    <p>Average CGPA</p>
+
+                    <h3 id="averageCgpa">
+                        7.84
+                    </h3>
+
+                    <span class="stat-label">
+                        Across all students
+                    </span>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ₹
+                    </div>
+
+                    <p>Average Package</p>
+
+                    <h3 id="averageSalary">
+                        ₹6.8 LPA
+                    </h3>
+
+                    <span class="stat-label">
+                        Among placed students
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CHART ROW 1 -->
+
+        <section class="chart-grid" id="academics">
+
+            <div class="chart-card large">
+
+                <div class="chart-card-header">
+
+                    <div>
+                        <p class="chart-label">
+                            PLACEMENT
+                        </p>
+
+                        <h3>
+                            Placement by Branch
+                        </h3>
+                    </div>
+
+                    <select id="branchFilter">
+                        <option value="all">
+                            All Branches
+                        </option>
+
+                        <option value="CSE">
+                            CSE
+                        </option>
+
+                        <option value="IT">
+                            IT
+                        </option>
+
+                        <option value="ECE">
+                            ECE
+                        </option>
+
+                        <option value="MECH">
+                            Mechanical
+                        </option>
+                    </select>
+
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="branchChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-card">
+
+                <div class="chart-card-header">
+
+                    <div>
+                        <p class="chart-label">
+                            ACADEMICS
+                        </p>
+
+                        <h3>
+                            CGPA & Placement
+                        </h3>
+                    </div>
+
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="cgpaChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CHART ROW 2 -->
+
+        <section class="chart-grid" id="experience">
+
+            <div class="chart-card">
+
+                <div class="chart-card-header">
+
+                    <div>
+                        <p class="chart-label">
+                            EXPERIENCE
+                        </p>
+
+                        <h3>
+                            Internship Impact
+                        </h3>
+                    </div>
+
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="internshipChart"></canvas>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-card large">
+
+                <div class="chart-card-header">
+
+                    <div>
+                        <p class="chart-label">
+                            SALARY
+                        </p>
+
+                        <h3>
+                            Average Package by Branch
+                        </h3>
+                    </div>
+
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="salaryChart"></canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- INSIGHTS -->
+
+        <section class="insights-section" id="insights">
+
+            <div class="dashboard-section-heading">
+
+                <div>
+
+                    <p class="section-tag">
+                        AUTOMATED INSIGHTS
+                    </p>
+
+                    <h2>
+                        What does the data tell us?
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="insights-grid">
+
+                <article class="insight-card">
+
+                    <div class="insight-number">
+                        01
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Internship Experience
+                        </h3>
+
+                        <p>
+                            Students with internship experience
+                            show a higher placement rate than
+                            students without internship experience
+                            in this dataset.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="insight-card">
+
+                    <div class="insight-number">
+                        02
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Academic Performance
+                        </h3>
+
+                        <p>
+                            Students in higher CGPA groups show
+                            stronger placement outcomes in the
+                            analyzed dataset.
+                        </p>
+
+                    </div>
+
+                </article>
+
+
+                <article class="insight-card">
+
+                    <div class="insight-number">
+                        03
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Branch Differences
+                        </h3>
+
+                        <p>
+                            Placement rates vary across academic
+                            branches, highlighting differences in
+                            placement outcomes.
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER ACTION -->
+
+        <section class="dashboard-footer">
+
+            <h2>
+                Want to analyze another college?
+            </h2>
+
+            <p>
+                Upload another dataset and generate a fresh dashboard.
+            </p>
+
+            <a
+                href="upload.html"
+                class="primary-button"
+            >
+                Upload New Dataset
+                <span>→</span>
+            </a>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <div class="footer-logo">
+
+            <span class="logo-mark">
+                CP
+            </span>
+
+            CampusPulse
+
+        </div>
+
+        <p>
+            College Placement Analytics Platform
+        </p>
+
+        <p class="copyright">
+            © 2026 CampusPulse. Built as a student project.
+        </p>
+
+    </footer>
+
+
+    <!-- CHART.JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="dashboard.js"></script>
+
+</body>
+
+</html>

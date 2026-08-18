@@ -1,0 +1,423 @@
+/* =========================================
+   CAMPUSPULSE
+   Dashboard Styles
+========================================= */
+
+.dashboard-page {
+    width: 100%;
+
+    max-width: 1450px;
+
+    margin: auto;
+
+    padding: 70px 7% 100px;
+}
+
+
+/* =========================================
+   DASHBOARD HEADER
+========================================= */
+
+.dashboard-header {
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 40px;
+
+    margin-bottom: 55px;
+}
+
+.dashboard-header h1 {
+    margin-top: 12px;
+
+    font-size: clamp(2.5rem, 4vw, 4rem);
+
+    line-height: 1.05;
+
+    letter-spacing: -2px;
+}
+
+.dashboard-header h1 span {
+    color: #315efb;
+}
+
+.dashboard-description {
+    max-width: 600px;
+
+    margin-top: 15px;
+
+    color: #667085;
+}
+
+.dataset-info {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px 17px;
+
+    background: white;
+
+    border: 1px solid #e3e7ef;
+
+    border-radius: 12px;
+
+    min-width: 240px;
+}
+
+.dataset-info p {
+    color: #98a2b3;
+
+    font-size: 0.68rem;
+}
+
+.dataset-info strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #344054;
+
+    font-size: 0.78rem;
+
+    font-weight: 600;
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #12b76a;
+}
+
+
+/* =========================================
+   SECTION HEADINGS
+========================================= */
+
+.dashboard-section-heading {
+    margin-bottom: 22px;
+}
+
+.dashboard-section-heading h2 {
+    margin-top: 7px;
+
+    font-size: 1.45rem;
+
+    letter-spacing: -0.5px;
+}
+
+
+/* =========================================
+   STAT CARDS
+========================================= */
+
+.stat-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 35px;
+}
+
+.stat-card {
+    padding: 24px;
+
+    background: white;
+
+    border: 1px solid #e4e8ef;
+
+    border-radius: 15px;
+
+    transition: 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow: 0 12px 30px rgba(31, 45, 61, 0.05);
+}
+
+.stat-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    border-radius: 10px;
+
+    background: #edf2ff;
+
+    color: #315efb;
+
+    font-size: 0.9rem;
+}
+
+.stat-card > p {
+    color: #667085;
+
+    font-size: 0.78rem;
+}
+
+.stat-card h3 {
+    margin-top: 5px;
+
+    font-size: 1.75rem;
+
+    letter-spacing: -0.7px;
+}
+
+.stat-label {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #98a2b3;
+
+    font-size: 0.68rem;
+}
+
+.stat-label.positive {
+    color: #039855;
+}
+
+
+/* =========================================
+   CHART GRID
+========================================= */
+
+.chart-grid {
+    display: grid;
+
+    grid-template-columns: 1.3fr 1fr;
+
+    gap: 18px;
+
+    margin-bottom: 18px;
+}
+
+.chart-card {
+    min-height: 390px;
+
+    padding: 25px;
+
+    background: white;
+
+    border: 1px solid #e4e8ef;
+
+    border-radius: 16px;
+}
+
+.chart-card.large {
+    min-width: 0;
+}
+
+.chart-card-header {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+.chart-label {
+    color: #98a2b3;
+
+    font-size: 0.63rem;
+
+    font-weight: 800;
+
+    letter-spacing: 1.4px;
+}
+
+.chart-card-header h3 {
+    margin-top: 4px;
+
+    font-size: 1rem;
+}
+
+.chart-card select {
+    padding: 8px 12px;
+
+    border: 1px solid #dfe4ec;
+
+    border-radius: 8px;
+
+    background: white;
+
+    color: #475467;
+
+    font-size: 0.72rem;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+.chart-container {
+    height: 290px;
+
+    margin-top: 20px;
+
+    position: relative;
+}
+
+
+/* =========================================
+   INSIGHTS
+========================================= */
+
+.insights-section {
+    margin-top: 80px;
+}
+
+.insights-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 16px;
+}
+
+.insight-card {
+    display: flex;
+
+    gap: 20px;
+
+    padding: 25px;
+
+    background: white;
+
+    border: 1px solid #e4e8ef;
+
+    border-radius: 15px;
+}
+
+.insight-number {
+    color: #315efb;
+
+    font-size: 0.72rem;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.insight-card h3 {
+    font-size: 0.95rem;
+}
+
+.insight-card p {
+    margin-top: 9px;
+
+    color: #667085;
+
+    font-size: 0.8rem;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   DASHBOARD FOOTER CTA
+========================================= */
+
+.dashboard-footer {
+    margin-top: 80px;
+
+    padding: 65px 30px;
+
+    background: #172033;
+
+    border-radius: 20px;
+
+    color: white;
+
+    text-align: center;
+}
+
+.dashboard-footer h2 {
+    font-size: 2rem;
+
+    letter-spacing: -0.8px;
+}
+
+.dashboard-footer p {
+    margin-top: 10px;
+
+    color: #aeb8ca;
+}
+
+.dashboard-footer .primary-button {
+    margin-top: 25px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1050px) {
+
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .chart-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .insights-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .dashboard-page {
+        padding: 50px 5% 70px;
+    }
+
+    .stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        padding: 20px;
+    }
+
+    .chart-card {
+        padding: 18px;
+    }
+
+    .dataset-info {
+        width: 100%;
+    }
+
+}

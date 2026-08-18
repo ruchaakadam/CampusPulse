@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Upload Data | CampusPulse</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="upload.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <a href="index.html" class="logo">
+            <span class="logo-mark">CP</span>
+            <span>CampusPulse</span>
+        </a>
+
+        <nav class="nav-links">
+            <a href="index.html#features">Features</a>
+            <a href="index.html#how-it-works">How It Works</a>
+            <a href="index.html#about">About</a>
+        </nav>
+
+        <a href="index.html" class="nav-button">
+            Home
+        </a>
+
+    </header>
+
+
+    <!-- UPLOAD PAGE -->
+
+    <main class="upload-page">
+
+        <div class="upload-page-content">
+
+            <div class="badge">
+                <span class="badge-dot"></span>
+                Step 1 · Upload Your Data
+            </div>
+
+            <h1>
+                Upload your
+                <span>college data.</span>
+            </h1>
+
+            <p class="upload-description">
+                Upload a CSV containing your college's student
+                placement data. CampusPulse will validate and
+                analyze it automatically.
+            </p>
+
+
+            <!-- DROP ZONE -->
+
+            <div class="drop-zone" id="dropZone">
+
+                <div class="upload-icon">
+                    ↑
+                </div>
+
+                <h3>
+                    Drag & drop your CSV here
+                </h3>
+
+                <p>
+                    or
+                </p>
+
+                <button
+                    type="button"
+                    class="browse-button"
+                    id="browseButton"
+                >
+                    Browse Files
+                </button>
+
+                <input
+                    type="file"
+                    id="fileInput"
+                    accept=".csv"
+                    hidden
+                >
+
+                <p class="file-info">
+                    Supported format: CSV · Maximum size: 10 MB
+                </p>
+
+            </div>
+
+
+            <!-- SELECTED FILE -->
+
+            <div
+                class="selected-file"
+                id="selectedFile"
+                style="display: none;"
+            >
+
+                <div class="file-icon">
+                    CSV
+                </div>
+
+                <div class="file-details">
+
+                    <h4 id="fileName">
+                        filename.csv
+                    </h4>
+
+                    <p id="fileSize">
+                        0 KB
+                    </p>
+
+                </div>
+
+                <button
+                    class="remove-file"
+                    id="removeFile"
+                    type="button"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- VALIDATION MESSAGE -->
+
+            <div
+                class="validation-message"
+                id="validationMessage"
+                style="display: none;"
+            >
+            </div>
+
+
+            <!-- ANALYZE BUTTON -->
+
+            <button
+                class="primary-button analyze-button"
+                id="analyzeButton"
+                type="button"
+                disabled
+            >
+                Analyze Dataset
+                <span>→</span>
+            </button>
+
+
+            <!-- TEMPLATE LINK -->
+
+            <div class="template-help">
+
+                <p>
+                    Don't have the right format?
+                </p>
+
+                <button
+                    type="button"
+                    id="templateButton"
+                    class="template-link"
+                >
+                    Download CampusPulse Template
+                </button>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div class="footer-logo">
+            <span class="logo-mark">CP</span>
+            CampusPulse
+        </div>
+
+        <p>
+            College Placement Analytics Platform
+        </p>
+
+        <p class="copyright">
+            © 2026 CampusPulse. Built as a student project.
+        </p>
+
+    </footer>
+
+
+    <script src="upload.js"></script>
+
+</body>
+
+</html>
