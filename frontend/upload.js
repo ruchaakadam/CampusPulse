@@ -28,6 +28,14 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
 
 // =========================================
+// IMPORTANT
+// Store the actual selected file here
+// =========================================
+
+let currentFile = null;
+
+
+// =========================================
 // OPEN FILE SELECTOR
 // =========================================
 
@@ -49,7 +57,7 @@ dropZone.addEventListener("click", () => {
 
 
 // =========================================
-// FILE SELECTED
+// FILE SELECTED USING BROWSE
 // =========================================
 
 fileInput.addEventListener("change", () => {
@@ -106,6 +114,7 @@ function processFile(file) {
 
     clearValidation();
 
+
     // Check file type
     if (!file.name.toLowerCase().endsWith(".csv")) {
 
@@ -134,7 +143,16 @@ function processFile(file) {
     }
 
 
-    // Display selected file
+    // =========================================
+    // SAVE THE ACTUAL FILE
+    // =========================================
+
+    currentFile = file;
+
+
+    // =========================================
+    // DISPLAY SELECTED FILE
+    // =========================================
 
     fileName.textContent = file.name;
 
@@ -144,10 +162,15 @@ function processFile(file) {
 
     analyzeButton.disabled = false;
 
+
     showValidation(
         "File selected successfully. Ready for analysis.",
         "success"
     );
+
+
+    console.log("File stored successfully:", currentFile.name);
+    console.log("File size:", currentFile.size);
 
 }
 
@@ -165,10 +188,16 @@ removeFile.addEventListener("click", () => {
 
 function resetFile() {
 
+    // Remove actual file
+    currentFile = null;
+
+    // Clear input
     fileInput.value = "";
 
+    // Hide file card
     selectedFile.style.display = "none";
 
+    // Disable analyze button
     analyzeButton.disabled = true;
 
     clearValidation();
@@ -211,11 +240,15 @@ function clearValidation() {
 function formatFileSize(bytes) {
 
     if (bytes < 1024) {
+
         return `${bytes} Bytes`;
+
     }
 
     if (bytes < 1024 * 1024) {
+
         return `${(bytes / 1024).toFixed(1)} KB`;
+
     }
 
     return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
@@ -224,17 +257,151 @@ function formatFileSize(bytes) {
 
 
 // =========================================
-// ANALYZE BUTTON
+// ANALYZE DATASET
 // =========================================
 
-analyzeButton.addEventListener("click", () => {
+analyzeButton.addEventListener("click", async () => {
 
-    const file = fileInput.files[0];
 
-    if (!file) {
+    // =========================================
+    // USE currentFile INSTEAD OF fileInput.files
+    // =========================================
+
+    if (!currentFile) {
+
+        showValidation(
+            "Please select a CSV file first.",
+            "error"
+        );
+
         return;
     }
 
-    window.location.href = "dashboard.html";
+
+    console.log("=================================");
+    console.log("Analyze button clicked");
+    console.log("File:", currentFile.name);
+    console.log("Size:", currentFile.size);
+    console.log("Type:", currentFile.type);
+    console.log("=================================");
+
+
+    // Disable button while processing
+    analyzeButton.disabled = true;
+
+    analyzeButton.innerHTML =
+        "Analyzing... <span>⏳</span>";
+
+
+    try {
+
+
+        // =========================================
+        // CREATE FORM DATA
+        // =========================================
+
+        const formData = new FormData();
+
+        formData.append("file", currentFile);
+
+
+        console.log("Sending file to Flask...");
+
+
+        // =========================================
+        // SEND TO FLASK
+        // =========================================
+
+        const response = await fetch(
+            "http://127.0.0.1:5000/analyze",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+
+        console.log(
+            "Backend response status:",
+            response.status
+        );
+
+
+        const result = await response.json();
+
+
+        console.log(
+            "Backend response:",
+            result
+        );
+
+
+        // =========================================
+        // CHECK RESPONSE
+        // =========================================
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.error ||
+                `Backend returned ${response.status}`
+            );
+
+        }
+
+
+        // =========================================
+        // SAVE RESULT
+        // =========================================
+
+        localStorage.setItem(
+            "campusPulseAnalysis",
+            JSON.stringify(result)
+        );
+
+
+        showValidation(
+            "Analysis completed successfully!",
+            "success"
+        );
+
+
+        // =========================================
+        // GO TO DASHBOARD
+        // =========================================
+
+        setTimeout(() => {
+
+            window.location.href =
+                "dashboard.html";
+
+        }, 500);
+
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "ANALYSIS ERROR:",
+            error
+        );
+
+
+        showValidation(
+            "Analysis failed: " +
+            error.message,
+            "error"
+        );
+
+
+        analyzeButton.disabled = false;
+
+
+        analyzeButton.innerHTML =
+            'Analyze Dataset <span>→</span>';
+
+    }
 
 });

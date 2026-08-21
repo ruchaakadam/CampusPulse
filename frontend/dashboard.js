@@ -5,62 +5,28 @@
 
 
 // =========================================
-// DEMO DATA
+// GET ANALYSIS DATA
 // =========================================
 
-// These numbers are temporary.
-// Later they will come from the Python backend.
+const storedData =
+    localStorage.getItem("campusPulseAnalysis");
 
-const demoData = {
 
-    branches: [
-        "CSE",
-        "IT",
-        "ECE",
-        "MECH"
-    ],
+// If there is no data
+if (!storedData) {
 
-    placementRates: [
-        84,
-        81,
-        69,
-        57
-    ],
+    console.error(
+        "No CampusPulse analysis data found."
+    );
 
-    averageSalary: [
-        8.1,
-        7.6,
-        6.2,
-        5.1
-    ],
+}
 
-    cgpaGroups: [
-        "Below 6",
-        "6–7",
-        "7–8",
-        "8–9",
-        "9+"
-    ],
 
-    cgpaPlacement: [
-        48,
-        56,
-        69,
-        84,
-        91
-    ],
-
-    internshipLabels: [
-        "Internship",
-        "No Internship"
-    ],
-
-    internshipPlacement: [
-        84,
-        61
-    ]
-
-};
+// Convert saved JSON into JavaScript object
+const analysisData =
+    storedData
+        ? JSON.parse(storedData)
+        : null;
 
 
 // =========================================
@@ -74,73 +40,114 @@ Chart.defaults.color = "#667085";
 
 
 // =========================================
+// CHECK DATA
+// =========================================
+
+if (analysisData) {
+
+    console.log(
+        "CampusPulse analysis data:",
+        analysisData
+    );
+
+}
+
+
+// =========================================
 // BRANCH CHART
 // =========================================
 
 const branchCtx =
     document.getElementById("branchChart");
 
-const branchChart =
-    new Chart(branchCtx, {
+let branchChart = null;
 
-        type: "bar",
 
-        data: {
+if (
+    branchCtx &&
+    analysisData &&
+    analysisData.branch_data
+) {
 
-            labels: demoData.branches,
+    const branches =
+        analysisData.branch_data.map(
+            item => item.branch
+        );
 
-            datasets: [{
+    const placementRates =
+        analysisData.branch_data.map(
+            item => item.placement_rate
+        );
 
-                label: "Placement Rate (%)",
 
-                data: demoData.placementRates,
+    branchChart = new Chart(
+        branchCtx,
+        {
 
-                backgroundColor: "#315efb",
+            type: "bar",
 
-                borderRadius: 7,
+            data: {
 
-                borderSkipped: false
+                labels: branches,
 
-            }]
+                datasets: [{
 
-        },
+                    label:
+                        "Placement Rate (%)",
 
-        options: {
+                    data: placementRates,
 
-            responsive: true,
+                    backgroundColor: "#315efb",
 
-            maintainAspectRatio: false,
+                    borderRadius: 7,
 
-            plugins: {
+                    borderSkipped: false
 
-                legend: {
-                    display: false
-                }
+                }]
 
             },
 
-            scales: {
+            options: {
 
-                y: {
+                responsive: true,
 
-                    beginAtZero: true,
+                maintainAspectRatio: false,
 
-                    max: 100,
+                plugins: {
 
-                    ticks: {
-
-                        callback: function(value) {
-                            return value + "%";
-                        }
-
+                    legend: {
+                        display: false
                     }
 
                 },
 
-                x: {
+                scales: {
 
-                    grid: {
-                        display: false
+                    y: {
+
+                        beginAtZero: true,
+
+                        max: 100,
+
+                        ticks: {
+
+                            callback:
+                                function(value) {
+
+                                    return value + "%";
+
+                                }
+
+                        }
+
+                    },
+
+                    x: {
+
+                        grid: {
+                            display: false
+                        }
+
                     }
 
                 }
@@ -148,8 +155,9 @@ const branchChart =
             }
 
         }
+    );
 
-    });
+}
 
 
 // =========================================
@@ -159,83 +167,112 @@ const branchChart =
 const cgpaCtx =
     document.getElementById("cgpaChart");
 
-new Chart(cgpaCtx, {
 
-    type: "line",
+if (
+    cgpaCtx &&
+    analysisData &&
+    analysisData.cgpa_data
+) {
 
-    data: {
+    const groups =
+        analysisData.cgpa_data.map(
+            item => item.group
+        );
 
-        labels: demoData.cgpaGroups,
+    const placementRates =
+        analysisData.cgpa_data.map(
+            item => item.placement_rate
+        );
 
-        datasets: [{
 
-            label: "Placement Rate",
+    new Chart(
+        cgpaCtx,
+        {
 
-            data: demoData.cgpaPlacement,
+            type: "line",
 
-            borderColor: "#315efb",
+            data: {
 
-            backgroundColor: "rgba(49, 94, 251, 0.08)",
+                labels: groups,
 
-            borderWidth: 3,
+                datasets: [{
 
-            tension: 0.35,
+                    label:
+                        "Placement Rate",
 
-            fill: true,
+                    data: placementRates,
 
-            pointRadius: 4,
+                    borderColor: "#315efb",
 
-            pointBackgroundColor: "#315efb"
+                    backgroundColor:
+                        "rgba(49, 94, 251, 0.08)",
 
-        }]
+                    borderWidth: 3,
 
-    },
+                    tension: 0.35,
 
-    options: {
+                    fill: true,
 
-        responsive: true,
+                    pointRadius: 4,
 
-        maintainAspectRatio: false,
+                    pointBackgroundColor:
+                        "#315efb"
 
-        plugins: {
-
-            legend: {
-                display: false
-            }
-
-        },
-
-        scales: {
-
-            y: {
-
-                beginAtZero: true,
-
-                max: 100,
-
-                ticks: {
-
-                    callback: function(value) {
-                        return value + "%";
-                    }
-
-                }
+                }]
 
             },
 
-            x: {
+            options: {
 
-                grid: {
-                    display: false
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    }
+
+                },
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        max: 100,
+
+                        ticks: {
+
+                            callback:
+                                function(value) {
+
+                                    return value + "%";
+
+                                }
+
+                        }
+
+                    },
+
+                    x: {
+
+                        grid: {
+                            display: false
+                        }
+
+                    }
+
                 }
 
             }
 
         }
+    );
 
-    }
-
-});
+}
 
 
 // =========================================
@@ -245,132 +282,90 @@ new Chart(cgpaCtx, {
 const internshipCtx =
     document.getElementById("internshipChart");
 
-new Chart(internshipCtx, {
 
-    type: "doughnut",
+if (
+    internshipCtx &&
+    analysisData &&
+    analysisData.internship_data
+) {
 
-    data: {
+    const labels =
+        analysisData.internship_data.map(
+            item => item.category
+        );
 
-        labels: demoData.internshipLabels,
+    const placementRates =
+        analysisData.internship_data.map(
+            item => item.placement_rate
+        );
 
-        datasets: [{
 
-            data: demoData.internshipPlacement,
+    new Chart(
+        internshipCtx,
+        {
 
-            backgroundColor: [
-                "#315efb",
-                "#dfe4ec"
-            ],
+            type: "doughnut",
 
-            borderWidth: 0
+            data: {
 
-        }]
+                labels: labels,
 
-    },
+                datasets: [{
 
-    options: {
+                    data: placementRates,
 
-        responsive: true,
+                    backgroundColor: [
+                        "#315efb",
+                        "#dfe4ec"
+                    ],
 
-        maintainAspectRatio: false,
+                    borderWidth: 0
 
-        cutout: "68%",
+                }]
 
-        plugins: {
+            },
 
-            legend: {
+            options: {
 
-                position: "bottom",
+                responsive: true,
 
-                labels: {
+                maintainAspectRatio: false,
 
-                    padding: 20
+                cutout: "68%",
+
+                plugins: {
+
+                    legend: {
+
+                        position: "bottom",
+
+                        labels: {
+
+                            padding: 20
+
+                        }
+
+                    }
 
                 }
 
             }
 
         }
+    );
 
-    }
-
-});
+}
 
 
 // =========================================
 // SALARY CHART
 // =========================================
 
-const salaryCtx =
-    document.getElementById("salaryChart");
-
-new Chart(salaryCtx, {
-
-    type: "bar",
-
-    data: {
-
-        labels: demoData.branches,
-
-        datasets: [{
-
-            label: "Average Package (LPA)",
-
-            data: demoData.averageSalary,
-
-            backgroundColor: "#172033",
-
-            borderRadius: 7,
-
-            borderSkipped: false
-
-        }]
-
-    },
-
-    options: {
-
-        responsive: true,
-
-        maintainAspectRatio: false,
-
-        plugins: {
-
-            legend: {
-                display: false
-            }
-
-        },
-
-        scales: {
-
-            y: {
-
-                beginAtZero: true,
-
-                ticks: {
-
-                    callback: function(value) {
-                        return "₹" + value;
-                    }
-
-                }
-
-            },
-
-            x: {
-
-                grid: {
-                    display: false
-                }
-
-            }
-
-        }
-
-    }
-
-});
+// Your current Flask backend does not yet
+// return branch-wise average salary data.
+//
+// So we will add this chart after the first
+// three charts are confirmed working.
 
 
 // =========================================
@@ -380,32 +375,103 @@ new Chart(salaryCtx, {
 const branchFilter =
     document.getElementById("branchFilter");
 
-branchFilter.addEventListener("change", () => {
 
-    const selectedBranch =
-        branchFilter.value;
+if (
+    branchFilter &&
+    branchChart &&
+    analysisData &&
+    analysisData.branch_data
+) {
 
-    if (selectedBranch === "all") {
+    const branches =
+        analysisData.branch_data.map(
+            item => item.branch
+        );
 
-        branchChart.data.labels =
-            demoData.branches;
+    const rates =
+        analysisData.branch_data.map(
+            item => item.placement_rate
+        );
 
-        branchChart.data.datasets[0].data =
-            demoData.placementRates;
 
-    } else {
+    branchFilter.addEventListener(
+        "change",
+        () => {
 
-        const index =
-            demoData.branches.indexOf(selectedBranch);
+            const selectedBranch =
+                branchFilter.value;
 
-        branchChart.data.labels =
-            [selectedBranch];
 
-        branchChart.data.datasets[0].data =
-            [demoData.placementRates[index]];
+            if (selectedBranch === "all") {
 
-    }
+                branchChart.data.labels =
+                    branches;
 
-    branchChart.update();
+                branchChart.data.datasets[0].data =
+                    rates;
 
-});
+            }
+
+            else {
+
+                const index =
+                    branches.indexOf(
+                        selectedBranch
+                    );
+
+
+                if (index !== -1) {
+
+                    branchChart.data.labels =
+                        [selectedBranch];
+
+                    branchChart.data.datasets[0].data =
+                        [rates[index]];
+
+                }
+
+            }
+
+
+            branchChart.update();
+
+        }
+    );
+
+}
+
+
+// =========================================
+// UPDATE OVERVIEW CARDS
+// =========================================
+
+if (analysisData) {
+
+    const overview =
+        analysisData.overview;
+
+
+    console.log(
+        "Total Students:",
+        overview.total_students
+    );
+
+
+    console.log(
+        "Placement Rate:",
+        overview.placement_rate
+    );
+
+
+    console.log(
+        "Average CGPA:",
+        overview.average_cgpa
+    );
+
+
+    console.log(
+        "Average Package:",
+        overview.average_package
+    );
+
+}
