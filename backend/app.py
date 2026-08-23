@@ -2,6 +2,11 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
 
+
+# =========================================
+# CAMPUSPULSE FLASK APP
+# =========================================
+
 app = Flask(__name__)
 CORS(app)
 
@@ -10,8 +15,9 @@ CORS(app)
 # HOME
 # =========================================
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def home():
+
     return jsonify({
         "message": "CampusPulse backend is running!"
     })
@@ -26,63 +32,96 @@ def analyze():
 
     try:
 
-        # =========================================
+        # -----------------------------------------
         # CHECK FILE
-        # =========================================
+        # -----------------------------------------
 
         if "file" not in request.files:
 
             return jsonify({
-                "error": "No file uploaded"
+                "error": "No file uploaded."
             }), 400
+
 
         file = request.files["file"]
 
-        print("================================")
-        print("FILE RECEIVED:", file.filename)
 
-        # =========================================
-        # READ CSV
-        # =========================================
+        if file.filename == "":
 
-        df = pd.read_csv(file)
+            return jsonify({
+                "error": "No file selected."
+            }), 400
 
-        # Clean column names
+
+        # -----------------------------------------
+        # CHECK FILE TYPE
+        # -----------------------------------------
+
+        filename = file.filename.lower()
+
+
+        if filename.endswith(".csv"):
+
+            df = pd.read_csv(file)
+
+
+        elif filename.endswith(".xlsx"):
+
+            df = pd.read_excel(file)
+
+
+        else:
+
+            return jsonify({
+                "error": "Unsupported file type. Please upload a CSV or XLSX file."
+            }), 400
+
+
+        # -----------------------------------------
+        # CLEAN COLUMN NAMES
+        # -----------------------------------------
+
         df.columns = (
             df.columns
+            .astype(str)
             .str.strip()
-            .str.lower()
         )
 
-        print("COLUMNS RECEIVED:")
-        print(df.columns.tolist())
-        print("SHAPE:", df.shape)
-        print("================================")
 
-        # =========================================
+        # -----------------------------------------
         # REQUIRED COLUMNS
-        # =========================================
+        # -----------------------------------------
 
         required_columns = [
+
             "placed",
             "cgpa",
             "branch",
             "internships",
             "package_lpa"
+
         ]
 
+
         missing_columns = [
+
             column
             for column in required_columns
             if column not in df.columns
+
         ]
+
 
         if missing_columns:
 
             return jsonify({
-                "error": "Missing required column(s): "
-                         + ", ".join(missing_columns)
+
+                "error":
+                    "Missing required column(s): "
+                    + ", ".join(missing_columns)
+
             }), 400
+
 
         # =========================================
         # BASIC STATISTICS
@@ -90,90 +129,195 @@ def analyze():
 
         total_students = len(df)
 
-        placed_values = pd.to_numeric(
+
+        # -----------------------------------------
+        # PLACED
+        # -----------------------------------------
+
+        placed_numeric = pd.to_numeric(
             df["placed"],
             errors="coerce"
         ).fillna(0)
 
-        placed_count = placed_values.sum()
+
+        placed_count = placed_numeric.sum()
+
 
         placement_rate = (
-            placed_count / total_students * 100
+
+            placed_count /
+            total_students *
+            100
+
             if total_students > 0
             else 0
+
         )
 
-        # =========================================
-        # AVERAGE CGPA
-        # =========================================
 
-        average_cgpa = pd.to_numeric(
+        # -----------------------------------------
+        # CGPA
+        # -----------------------------------------
+
+        cgpa_numeric = pd.to_numeric(
             df["cgpa"],
             errors="coerce"
-        ).mean()
+        )
+
+
+        average_cgpa = cgpa_numeric.mean()
+
+
+        if pd.isna(average_cgpa):
+
+            average_cgpa = 0
+
 
         # =========================================
         # AVERAGE PACKAGE
         # =========================================
 
-        package_data = pd.to_numeric(
+        package_numeric = pd.to_numeric(
             df["package_lpa"],
             errors="coerce"
         )
 
-        placed_mask = placed_values == 1
 
-        average_package = (
-            package_data[placed_mask].mean()
-            if placed_mask.sum() > 0
-            else 0
+        placed_mask = (
+            placed_numeric == 1
         )
 
+
+        if placed_mask.sum() > 0:
+
+            average_package = (
+                package_numeric[
+                    placed_mask
+                ].mean()
+            )
+
+        else:
+
+            average_package = 0
+
+
+        if pd.isna(average_package):
+
+            average_package = 0
+
+
         # =========================================
-        # BRANCH-WISE PLACEMENT
+        # BRANCH-WISE ANALYSIS
         # =========================================
 
         branch_data = []
 
-        for branch, group in df.groupby("branch"):
+
+        for branch, group in df.groupby(
+            "branch",
+            dropna=False
+        ):
 
             students = len(group)
 
-            placed = pd.to_numeric(
+
+            group_placed = pd.to_numeric(
                 group["placed"],
                 errors="coerce"
-            ).fillna(0).sum()
+            ).fillna(0)
 
-            rate = (
-                placed / students * 100
+
+            placed = group_placed.sum()
+
+
+            placement_rate_branch = (
+
+                placed /
+                students *
+                100
+
                 if students > 0
                 else 0
+
             )
+
+
+            # -----------------------------------------
+            # Branch average package
+            # -----------------------------------------
+
+            group_package = pd.to_numeric(
+                group["package_lpa"],
+                errors="coerce"
+            )
+
+
+            group_placed_mask = (
+                group_placed == 1
+            )
+
+
+            if group_placed_mask.sum() > 0:
+
+                branch_average_package = (
+                    group_package[
+                        group_placed_mask
+                    ].mean()
+                )
+
+            else:
+
+                branch_average_package = 0
+
+
+            if pd.isna(branch_average_package):
+
+                branch_average_package = 0
+
+
+            branch_name = str(branch)
+
+
+            if branch_name == "nan":
+
+                branch_name = "Unknown"
+
 
             branch_data.append({
 
-                "branch": str(branch),
+                "branch": branch_name,
 
-                "placement_rate": round(
-                    rate,
-                    2
-                )
+                "placement_rate":
+                    round(
+                        placement_rate_branch,
+                        2
+                    ),
+
+                "average_package":
+                    round(
+                        branch_average_package,
+                        2
+                    )
 
             })
+
+
+        # Sort branches alphabetically
+
+        branch_data = sorted(
+            branch_data,
+            key=lambda x: x["branch"]
+        )
+
 
         # =========================================
         # CGPA VS PLACEMENT
         # =========================================
 
-        df["cgpa_numeric"] = pd.to_numeric(
-            df["cgpa"],
-            errors="coerce"
-        )
-
-        def cgpa_group(cgpa):
+        def get_cgpa_group(cgpa):
 
             if pd.isna(cgpa):
-                return "Unknown"
+                return None
 
             if cgpa < 6:
                 return "Below 6"
@@ -190,19 +334,27 @@ def analyze():
             else:
                 return "9+"
 
-        df["cgpa_group"] = df[
-            "cgpa_numeric"
-        ].apply(cgpa_group)
+
+        df["cgpa_group"] = (
+            cgpa_numeric.apply(
+                get_cgpa_group
+            )
+        )
+
 
         cgpa_order = [
+
             "Below 6",
             "6–7",
             "7–8",
             "8–9",
             "9+"
+
         ]
 
+
         cgpa_data = []
+
 
         for group_name in cgpa_order:
 
@@ -210,83 +362,116 @@ def analyze():
                 df["cgpa_group"] == group_name
             ]
 
+
             if len(group) == 0:
 
                 rate = 0
 
             else:
 
-                placed = pd.to_numeric(
+                group_placed = pd.to_numeric(
                     group["placed"],
                     errors="coerce"
-                ).fillna(0).sum()
+                ).fillna(0)
+
+
+                placed = group_placed.sum()
+
 
                 rate = (
-                    placed / len(group) * 100
+                    placed /
+                    len(group) *
+                    100
                 )
+
 
             cgpa_data.append({
 
                 "group": group_name,
 
-                "placement_rate": round(
-                    rate,
-                    2
-                )
+                "placement_rate":
+                    round(rate, 2)
 
             })
+
 
         # =========================================
         # INTERNSHIP VS PLACEMENT
         # =========================================
 
-        df["internships_numeric"] = pd.to_numeric(
+        internships_numeric = pd.to_numeric(
             df["internships"],
             errors="coerce"
         ).fillna(0)
 
+
+        internship_categories = [
+
+            ("Internship", internships_numeric > 0),
+
+            ("No Internship", internships_numeric <= 0)
+
+        ]
+
+
         internship_data = []
 
-        for has_internship, group in df.groupby(
-            df["internships_numeric"] > 0
-        ):
 
-            students = len(group)
+        for category, mask in internship_categories:
 
-            placed = pd.to_numeric(
-                group["placed"],
-                errors="coerce"
-            ).fillna(0).sum()
+            group = df[mask]
 
-            rate = (
-                placed / students * 100
-                if students > 0
-                else 0
-            )
+
+            if len(group) == 0:
+
+                rate = 0
+
+            else:
+
+                group_placed = pd.to_numeric(
+                    group["placed"],
+                    errors="coerce"
+                ).fillna(0)
+
+
+                placed = group_placed.sum()
+
+
+                rate = (
+                    placed /
+                    len(group) *
+                    100
+                )
+
 
             internship_data.append({
 
-                "category": (
-                    "Internship"
-                    if has_internship
-                    else "No Internship"
-                ),
+                "category": category,
 
-                "placement_rate": round(
-                    rate,
-                    2
-                )
+                "placement_rate":
+                    round(rate, 2)
 
             })
 
+
         # =========================================
-        # RETURN ANALYSIS
+        # RESPONSE DATA
         # =========================================
 
-        return jsonify({
+        response = {
 
             "message":
                 "File analyzed successfully!",
+
+            "filename":
+                file.filename,
+
+            "file_type":
+                (
+                    "CSV"
+                    if filename.endswith(".csv")
+                    else "XLSX"
+                ),
 
             "rows":
                 total_students,
@@ -328,7 +513,28 @@ def analyze():
             "internship_data":
                 internship_data
 
-        })
+        }
+
+
+        # -----------------------------------------
+        # PRINT RESULT IN TERMINAL
+        # -----------------------------------------
+
+        print()
+        print("========================================")
+        print("CampusPulse analysis completed")
+        print("File:", file.filename)
+        print("Rows:", total_students)
+        print(
+            "Placement rate:",
+            round(placement_rate, 2)
+        )
+        print("========================================")
+        print()
+
+
+        return jsonify(response)
+
 
     # =========================================
     # ERROR HANDLING
@@ -336,10 +542,18 @@ def analyze():
 
     except Exception as e:
 
-        print("ERROR:", e)
+        print()
+        print("========================================")
+        print("CAMPUSPULSE ERROR")
+        print(str(e))
+        print("========================================")
+        print()
+
 
         return jsonify({
+
             "error": str(e)
+
         }), 400
 
 
@@ -350,6 +564,7 @@ def analyze():
 if __name__ == "__main__":
 
     app.run(
-        debug=True,
-        port=5000
+        host="127.0.0.1",
+        port=5000,
+        debug=True
     )

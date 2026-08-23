@@ -2,202 +2,222 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Upload Data | CampusPulse</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CampusPulse - Upload Dataset</title>
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="upload.css">
+
 </head>
+
 
 <body>
 
-    <!-- NAVBAR -->
-
-    <header class="navbar">
-
-        <a href="index.html" class="logo">
-            <span class="logo-mark">CP</span>
-            <span>CampusPulse</span>
-        </a>
-
-        <nav class="nav-links">
-            <a href="index.html#features">Features</a>
-            <a href="index.html#how-it-works">How It Works</a>
-            <a href="index.html#about">About</a>
-        </nav>
-
-        <a href="index.html" class="nav-button">
-            Home
-        </a>
-
-    </header>
-
-
-    <!-- UPLOAD PAGE -->
-
     <main class="upload-page">
 
-        <div class="upload-page-content">
+        <!-- =========================================
+             HEADER
+        ========================================== -->
 
-            <div class="badge">
-                <span class="badge-dot"></span>
-                Step 1 · Upload Your Data
-            </div>
+        <section class="upload-header">
 
-            <h1>
-                Upload your
-                <span>college data.</span>
-            </h1>
+            <h1>Upload Placement Dataset</h1>
 
-            <p class="upload-description">
-                Upload a CSV containing your college's student
-                placement data. CampusPulse will validate and
-                analyze it automatically.
+            <p>
+                Upload your student placement dataset
+                and let CampusPulse analyze it automatically.
             </p>
 
+        </section>
 
-            <!-- DROP ZONE -->
 
-            <div class="drop-zone" id="dropZone">
+        <!-- =========================================
+             UPLOAD SECTION
+        ========================================== -->
+
+        <section class="upload-section">
+
+            <div id="dropZone"
+                 class="drop-zone">
+
+
+                <!-- Upload Icon -->
 
                 <div class="upload-icon">
                     ↑
                 </div>
 
-                <h3>
-                    Drag & drop your CSV here
-                </h3>
 
-                <p>
+                <!-- Heading -->
+
+                <h2>
+                    Drag &amp; drop your file here
+                </h2>
+
+
+                <p class="or-text">
                     or
                 </p>
 
+
+                <!-- Browse Button -->
+
                 <button
                     type="button"
-                    class="browse-button"
                     id="browseButton"
-                >
+                    class="browse-button">
+
                     Browse Files
+
                 </button>
+
+
+                <!--
+                    IMPORTANT:
+                    This input is hidden.
+                    The Browse Files button opens it.
+                -->
 
                 <input
                     type="file"
                     id="fileInput"
-                    accept=".csv,text/csv"
+                    accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    style="display: none;"
                 >
 
-                <p class="file-info">
-                    Supported format: CSV · Maximum size: 10 MB
+
+                <p class="file-help">
+
+                    Supported formats:
+                    CSV and Excel (.xlsx)
+
+                    <br>
+
+                    Maximum size: 10 MB
+
                 </p>
 
             </div>
 
 
-            <!-- SELECTED FILE -->
+            <!-- =========================================
+                 SELECTED FILE
+            ========================================== -->
 
             <div
-                class="selected-file"
                 id="selectedFile"
+                class="selected-file"
                 style="display: none;"
             >
 
-                <div class="file-icon">
-                    CSV
+                <div class="file-info">
+
+                    <div
+                        id="fileTypeIcon"
+                        class="file-icon"
+                    >
+                        FILE
+                    </div>
+
+
+                    <div>
+
+                        <div
+                            id="fileName"
+                            class="file-name"
+                        >
+                        </div>
+
+
+                        <div
+                            id="fileSize"
+                            class="file-size"
+                        >
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="file-details">
-
-                    <h4 id="fileName">
-                        filename.csv
-                    </h4>
-
-                    <p id="fileSize">
-                        0 KB
-                    </p>
-
-                </div>
 
                 <button
-                    class="remove-file"
-                    id="removeFile"
                     type="button"
+                    id="removeFile"
+                    class="remove-file"
                 >
-                    ×
+
+                    Remove
+
                 </button>
 
             </div>
 
 
-            <!-- VALIDATION MESSAGE -->
+            <!-- =========================================
+                 VALIDATION MESSAGE
+            ========================================== -->
 
             <div
-                class="validation-message"
                 id="validationMessage"
+                class="validation-message"
                 style="display: none;"
             >
             </div>
 
 
-            <!-- ANALYZE BUTTON -->
+            <!-- =========================================
+                 ANALYZE BUTTON
+            ========================================== -->
 
             <button
-                class="primary-button analyze-button"
-                id="analyzeButton"
                 type="button"
+                id="analyzeButton"
+                class="analyze-button"
                 disabled
             >
+
                 Analyze Dataset
+
                 <span>→</span>
+
             </button>
 
 
-            <!-- TEMPLATE LINK -->
+            <!-- =========================================
+                 TEMPLATE
+            ========================================== -->
 
-            <div class="template-help">
+            <p class="template-text">
 
-                <p>
-                    Don't have the right format?
-                </p>
+                Recommended columns:
 
-                <button
-                    type="button"
-                    id="templateButton"
-                    class="template-link"
-                >
-                    Download CampusPulse Template
-                </button>
+                <br>
 
-            </div>
+                student_id, gender, age, degree, branch,
+                cgpa, backlogs, internships, certifications,
+                coding_skills, communication_skills,
+                aptitude_score, projects, placed,
+                company_type, package_lpa
 
-        </div>
+            </p>
+
+        </section>
 
     </main>
 
 
-    <!-- FOOTER -->
-
-    <footer>
-
-        <div class="footer-logo">
-            <span class="logo-mark">CP</span>
-            CampusPulse
-        </div>
-
-        <p>
-            College Placement Analytics Platform
-        </p>
-
-        <p class="copyright">
-            © 2026 CampusPulse. Built as a student project.
-        </p>
-
-    </footer>
-
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
 
     <script src="upload.js"></script>
 
 </body>
 
 </html>
+

@@ -3,40 +3,51 @@
 // Dashboard JavaScript
 // =========================================
 
+console.log("CampusPulse dashboard.js loaded");
+
 
 // =========================================
 // GET ANALYSIS DATA
 // =========================================
 
-const storedData =
-    localStorage.getItem("campusPulseAnalysis");
+const storedData = localStorage.getItem("campusPulseAnalysis");
 
-
-// If there is no data
 if (!storedData) {
 
-    console.error(
-        "No CampusPulse analysis data found."
-    );
+    console.error("No CampusPulse analysis data found.");
 
 }
 
 
 // Convert saved JSON into JavaScript object
-const analysisData =
-    storedData
+
+let analysisData = null;
+
+try {
+
+    analysisData = storedData
         ? JSON.parse(storedData)
         : null;
+
+} catch (error) {
+
+    console.error("Could not read analysis data:", error);
+
+}
 
 
 // =========================================
 // CHART DEFAULTS
 // =========================================
 
-Chart.defaults.font.family =
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+if (typeof Chart !== "undefined") {
 
-Chart.defaults.color = "#667085";
+    Chart.defaults.font.family =
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+    Chart.defaults.color = "#667085";
+
+}
 
 
 // =========================================
@@ -54,11 +65,140 @@ if (analysisData) {
 
 
 // =========================================
+// UPDATE OVERVIEW CARDS
+// =========================================
+
+if (analysisData && analysisData.overview) {
+
+    const overview = analysisData.overview;
+
+    console.log(
+        "Total Students:",
+        overview.total_students
+    );
+
+    console.log(
+        "Placement Rate:",
+        overview.placement_rate
+    );
+
+    console.log(
+        "Average CGPA:",
+        overview.average_cgpa
+    );
+
+    console.log(
+        "Average Package:",
+        overview.average_package
+    );
+
+
+    // Try to update common overview-card IDs
+
+    const totalStudents =
+        document.getElementById("totalStudents");
+
+    const placementRate =
+        document.getElementById("placementRate");
+
+    const averageCgpa =
+        document.getElementById("averageCgpa");
+
+    const averagePackage =
+        document.getElementById("averagePackage");
+
+
+    if (totalStudents) {
+
+        totalStudents.textContent =
+            overview.total_students;
+
+    }
+
+
+    if (placementRate) {
+
+        placementRate.textContent =
+            overview.placement_rate + "%";
+
+    }
+
+
+    if (averageCgpa) {
+
+        averageCgpa.textContent =
+            overview.average_cgpa;
+
+    }
+
+
+    if (averagePackage) {
+
+        averagePackage.textContent =
+            "₹" + overview.average_package + " LPA";
+
+    }
+
+}
+
+
+// =========================================
+// BRANCH DATA
+// =========================================
+
+let branchLabels = [];
+let branchPlacementRates = [];
+let branchAveragePackages = [];
+
+
+if (
+    analysisData &&
+    Array.isArray(analysisData.branch_data)
+) {
+
+    branchLabels =
+        analysisData.branch_data.map(
+            item => item.branch
+        );
+
+
+    branchPlacementRates =
+        analysisData.branch_data.map(
+            item => item.placement_rate
+        );
+
+
+    branchAveragePackages =
+        analysisData.branch_data.map(
+            item => item.average_package
+        );
+
+}
+
+
+console.log(
+    "Branch labels:",
+    branchLabels
+);
+
+console.log(
+    "Branch placement rates:",
+    branchPlacementRates
+);
+
+console.log(
+    "Branch average packages:",
+    branchAveragePackages
+);
+
+
+// =========================================
 // BRANCH CHART
 // =========================================
 
 const branchCtx =
     document.getElementById("branchChart");
+
 
 let branchChart = null;
 
@@ -66,19 +206,8 @@ let branchChart = null;
 if (
     branchCtx &&
     analysisData &&
-    analysisData.branch_data
+    typeof Chart !== "undefined"
 ) {
-
-    const branches =
-        analysisData.branch_data.map(
-            item => item.branch
-        );
-
-    const placementRates =
-        analysisData.branch_data.map(
-            item => item.placement_rate
-        );
-
 
     branchChart = new Chart(
         branchCtx,
@@ -88,16 +217,18 @@ if (
 
             data: {
 
-                labels: branches,
+                labels: branchLabels,
 
                 datasets: [{
 
                     label:
                         "Placement Rate (%)",
 
-                    data: placementRates,
+                    data:
+                        branchPlacementRates,
 
-                    backgroundColor: "#315efb",
+                    backgroundColor:
+                        "#315efb",
 
                     borderRadius: 7,
 
@@ -116,7 +247,9 @@ if (
                 plugins: {
 
                     legend: {
+
                         display: false
+
                     }
 
                 },
@@ -145,7 +278,9 @@ if (
                     x: {
 
                         grid: {
+
                             display: false
+
                         }
 
                     }
@@ -171,15 +306,17 @@ const cgpaCtx =
 if (
     cgpaCtx &&
     analysisData &&
-    analysisData.cgpa_data
+    Array.isArray(analysisData.cgpa_data) &&
+    typeof Chart !== "undefined"
 ) {
 
-    const groups =
+    const cgpaLabels =
         analysisData.cgpa_data.map(
             item => item.group
         );
 
-    const placementRates =
+
+    const cgpaRates =
         analysisData.cgpa_data.map(
             item => item.placement_rate
         );
@@ -193,16 +330,18 @@ if (
 
             data: {
 
-                labels: groups,
+                labels: cgpaLabels,
 
                 datasets: [{
 
                     label:
-                        "Placement Rate",
+                        "Placement Rate (%)",
 
-                    data: placementRates,
+                    data:
+                        cgpaRates,
 
-                    borderColor: "#315efb",
+                    borderColor:
+                        "#315efb",
 
                     backgroundColor:
                         "rgba(49, 94, 251, 0.08)",
@@ -231,7 +370,9 @@ if (
                 plugins: {
 
                     legend: {
+
                         display: false
+
                     }
 
                 },
@@ -260,7 +401,9 @@ if (
                     x: {
 
                         grid: {
+
                             display: false
+
                         }
 
                     }
@@ -286,15 +429,17 @@ const internshipCtx =
 if (
     internshipCtx &&
     analysisData &&
-    analysisData.internship_data
+    Array.isArray(analysisData.internship_data) &&
+    typeof Chart !== "undefined"
 ) {
 
-    const labels =
+    const internshipLabels =
         analysisData.internship_data.map(
             item => item.category
         );
 
-    const placementRates =
+
+    const internshipRates =
         analysisData.internship_data.map(
             item => item.placement_rate
         );
@@ -308,15 +453,20 @@ if (
 
             data: {
 
-                labels: labels,
+                labels:
+                    internshipLabels,
 
                 datasets: [{
 
-                    data: placementRates,
+                    data:
+                        internshipRates,
 
                     backgroundColor: [
+
                         "#315efb",
+
                         "#dfe4ec"
+
                     ],
 
                     borderWidth: 0
@@ -361,11 +511,99 @@ if (
 // SALARY CHART
 // =========================================
 
-// Your current Flask backend does not yet
-// return branch-wise average salary data.
-//
-// So we will add this chart after the first
-// three charts are confirmed working.
+const salaryCtx =
+    document.getElementById("salaryChart");
+
+
+if (
+    salaryCtx &&
+    analysisData &&
+    typeof Chart !== "undefined"
+) {
+
+    new Chart(
+        salaryCtx,
+        {
+
+            type: "bar",
+
+            data: {
+
+                labels:
+                    branchLabels,
+
+                datasets: [{
+
+                    label:
+                        "Average Package (LPA)",
+
+                    data:
+                        branchAveragePackages,
+
+                    backgroundColor:
+                        "#172033",
+
+                    borderRadius: 7,
+
+                    borderSkipped: false
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+
+                        display: false
+
+                    }
+
+                },
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+
+                            callback:
+                                function(value) {
+
+                                    return "₹" + value;
+
+                                }
+
+                        }
+
+                    },
+
+                    x: {
+
+                        grid: {
+
+                            display: false
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+}
 
 
 // =========================================
@@ -379,43 +617,33 @@ const branchFilter =
 if (
     branchFilter &&
     branchChart &&
-    analysisData &&
-    analysisData.branch_data
+    analysisData
 ) {
-
-    const branches =
-        analysisData.branch_data.map(
-            item => item.branch
-        );
-
-    const rates =
-        analysisData.branch_data.map(
-            item => item.placement_rate
-        );
-
 
     branchFilter.addEventListener(
         "change",
-        () => {
+        function() {
 
             const selectedBranch =
                 branchFilter.value;
 
 
-            if (selectedBranch === "all") {
+            if (
+                selectedBranch === "all"
+            ) {
 
                 branchChart.data.labels =
-                    branches;
+                    branchLabels;
 
                 branchChart.data.datasets[0].data =
-                    rates;
+                    branchPlacementRates;
 
             }
 
             else {
 
                 const index =
-                    branches.indexOf(
+                    branchLabels.indexOf(
                         selectedBranch
                     );
 
@@ -426,7 +654,7 @@ if (
                         [selectedBranch];
 
                     branchChart.data.datasets[0].data =
-                        [rates[index]];
+                        [branchPlacementRates[index]];
 
                 }
 
@@ -442,36 +670,9 @@ if (
 
 
 // =========================================
-// UPDATE OVERVIEW CARDS
+// FINAL DEBUG MESSAGE
 // =========================================
 
-if (analysisData) {
-
-    const overview =
-        analysisData.overview;
-
-
-    console.log(
-        "Total Students:",
-        overview.total_students
-    );
-
-
-    console.log(
-        "Placement Rate:",
-        overview.placement_rate
-    );
-
-
-    console.log(
-        "Average CGPA:",
-        overview.average_cgpa
-    );
-
-
-    console.log(
-        "Average Package:",
-        overview.average_package
-    );
-
-}
+console.log(
+    "CampusPulse dashboard initialization complete."
+);
