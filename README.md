@@ -1,97 +1,59 @@
-# CampusPulse
+# 📊 CampusPulse
 
-### Student Placement Analytics & Intelligence Platform
+### College Placement Analytics Dashboard
 
-CampusPulse is a web-based analytics platform that transforms student placement datasets into an interactive dashboard.
+CampusPulse is a web-based analytics platform that transforms student placement datasets into an interactive, visual dashboard.
 
-It analyzes placement performance across branches, academic performance, internship experience, and salary outcomes, helping colleges identify trends and make data-driven decisions.
-
----
-
-## 🚀 Features
-
-- 📁 Upload student placement datasets
-- 📊 Automatic placement analysis
-- 🎓 CGPA vs placement analysis
-- 🏫 Branch-wise placement comparison
-- 💼 Internship vs placement analysis
-- 💰 Average package analysis
-- 💡 Automated data-driven insights
-- 🔎 Branch filtering
-- 📈 Interactive charts
-- 🔄 Upload and analyze multiple datasets sequentially
-- ⚠️ File validation and error handling
-- 📱 Responsive dashboard
+Instead of manually analyzing spreadsheets and calculating placement statistics, users can upload a placement-related CSV file and CampusPulse automatically processes the data and presents meaningful insights through charts, statistics, and comparisons.
 
 ---
 
-## 🧠 What CampusPulse Analyzes
+## 🚀 Live Demo
 
-CampusPulse currently analyzes:
-
-### 1. Overall Placement
-
-- Total number of students
-- Overall placement rate
-- Average CGPA
-- Average package
-
-### 2. Branch-wise Placement
-
-CampusPulse calculates placement rates for each branch in the uploaded dataset.
-
-### 3. CGPA Analysis
-
-Students are grouped into:
-
-- Below 6
-- 6–7
-- 7–8
-- 8–9
-- 9+
-
-The platform calculates the placement rate for each group.
-
-### 4. Internship Impact
-
-Placement rates are compared between:
-
-- Students with internships
-- Students without internships
-
-### 5. Salary Analysis
-
-Average package is calculated branch-wise for placed students.
-
-### 6. Automated Insights
-
-CampusPulse automatically identifies patterns such as:
-
-- Highest placement branch
-- Lowest placement branch
-- Highest package branch
-- Highest-performing CGPA group
-- Internship placement difference
+👉 **CampusPulse:**  
+https://campuspulse-rysk.onrender.com
 
 ---
 
-## 📂 Dataset Requirements
+## 🎯 What Problem Does CampusPulse Solve?
 
-CampusPulse currently accepts:
+College placement data is often stored in large spreadsheets containing thousands of student records.
 
-**CSV (`.csv`)**
+Manually answering questions such as:
 
-Maximum file size:
+- What is the overall placement rate?
+- Which branch has the highest placement rate?
+- Does CGPA influence placement?
+- Do internships improve placement chances?
+- Which branch has the highest average package?
+- How many students were analyzed?
 
-**10 MB**
+can require significant manual data processing.
 
-### Required Core Columns
+CampusPulse automates this process.
 
-The following columns are required for the main analysis:
+### The workflow is simple:
+
+**Upload Dataset → Analyze Data → Generate Statistics → Visualize Trends → Discover Insights**
+
+---
+
+# ✨ Features
+
+## 📁 Dataset Upload
+
+Users can upload a student placement dataset directly through the web interface.
+
+CampusPulse provides:
+
+- Drag & drop file upload
+- Browse file selection
+- CSV validation
+- File size validation
+- Dataset requirement guidance
+- Automatic dataset analysis
+
+### Supported Format
 
 ```text
-branch
-cgpa
-internships
-placed
-package_lpa
+CSV (.csv)
