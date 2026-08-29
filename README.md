@@ -75,25 +75,6 @@ For example:
 
 CampusPulse automates these calculations and presents the results through an interactive dashboard.
 
----
-
-# 💡 Solution
-
-CampusPulse follows a simple workflow:
-
-```text
-Upload Dataset
-      ↓
-Validate Dataset
-      ↓
-Process Data
-      ↓
-Calculate Statistics
-      ↓
-Generate Visualizations
-      ↓
-Display Insights
-
 # 📂 CSV Dataset Requirements
 
 CampusPulse currently accepts student placement datasets in:
@@ -137,3 +118,21 @@ cgpa
 internships
 placed
 package_lpa
+---
+
+# 💡 Solution
+
+CampusPulse follows a simple workflow:
+
+```text
+Upload Dataset
+      ↓
+Validate Dataset
+      ↓
+Process Data
+      ↓
+Calculate Statistics
+      ↓
+Generate Visualizations
+      ↓
+Display Insights
