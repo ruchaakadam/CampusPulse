@@ -471,7 +471,7 @@ analyzeButton.addEventListener(
 
             const response =
                 await fetch(
-                    "http://127.0.0.1:5000/analyze",
+                    "https://campuspulse-c80h.onrender.com/analyze",
                     {
                         method: "POST",
                         body: formData
