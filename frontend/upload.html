@@ -5,8 +5,10 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>CampusPulse - Upload Dataset</title>
 
@@ -18,195 +20,250 @@
 
 <body>
 
+    <!-- =========================================
+         MAIN UPLOAD PAGE
+    ========================================== -->
+
     <main class="upload-page">
 
-        <!-- =========================================
-             HEADER
-        ========================================== -->
+        <div class="upload-page-content">
 
-        <section class="upload-header">
 
-            <h1>Upload Placement Dataset</h1>
+            <!-- =================================
+                 HEADER
+            ================================== -->
 
-            <p>
+            <div class="upload-eyebrow">
+                CAMPUSPULSE ANALYTICS
+            </div>
+
+
+            <h1>
+                Upload Placement
+                <span>Dataset</span>
+            </h1>
+
+
+            <p class="upload-description">
+
                 Upload your student placement dataset
-                and let CampusPulse analyze it automatically.
+                and let CampusPulse transform it into
+                meaningful placement insights.
+
             </p>
 
-        </section>
+
+            <!-- =================================
+                 UPLOAD CARD
+            ================================== -->
+
+            <section class="upload-section">
 
 
-        <!-- =========================================
-             UPLOAD SECTION
-        ========================================== -->
+                <!-- DROP ZONE -->
 
-        <section class="upload-section">
+                <div
+                    id="dropZone"
+                    class="drop-zone"
+                >
 
-            <div id="dropZone"
-                 class="drop-zone">
+                    <div class="upload-icon">
+                        ↑
+                    </div>
 
 
-                <!-- Upload Icon -->
+                    <h2>
+                        Drag &amp; drop your CSV file here
+                    </h2>
 
-                <div class="upload-icon">
-                    ↑
+
+                    <p class="or-text">
+                        or
+                    </p>
+
+
+                    <button
+                        type="button"
+                        id="browseButton"
+                        class="browse-button"
+                    >
+                        Browse Files
+                    </button>
+
+
+                    <input
+                        type="file"
+                        id="fileInput"
+                        accept=".csv,text/csv"
+                        hidden
+                    >
+
+
+                    <p class="file-help">
+
+                        Supported format:
+                        <strong>CSV (.csv)</strong>
+
+                        <br>
+
+                        Maximum file size:
+                        <strong>10 MB</strong>
+
+                    </p>
+
                 </div>
 
 
-                <!-- Heading -->
+                <!-- =================================
+                     SELECTED FILE
+                ================================== -->
 
-                <h2>
-                    Drag &amp; drop your file here
-                </h2>
-
-
-                <p class="or-text">
-                    or
-                </p>
-
-
-                <!-- Browse Button -->
-
-                <button
-                    type="button"
-                    id="browseButton"
-                    class="browse-button">
-
-                    Browse Files
-
-                </button>
-
-
-                <!--
-                    IMPORTANT:
-                    This input is hidden.
-                    The Browse Files button opens it.
-                -->
-
-                <input
-                    type="file"
-                    id="fileInput"
-                    accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                <div
+                    id="selectedFile"
+                    class="selected-file"
                     style="display: none;"
                 >
 
-
-                <p class="file-help">
-
-                    Supported formats:
-                    CSV and Excel (.xlsx)
-
-                    <br>
-
-                    Maximum size: 10 MB
-
-                </p>
-
-            </div>
+                    <div class="file-icon">
+                        CSV
+                    </div>
 
 
-            <!-- =========================================
-                 SELECTED FILE
-            ========================================== -->
+                    <div class="file-details">
 
-            <div
-                id="selectedFile"
-                class="selected-file"
-                style="display: none;"
-            >
+                        <h4 id="fileName">
+                            filename.csv
+                        </h4>
 
-                <div class="file-info">
+                        <p id="fileSize">
+                            0 KB
+                        </p>
 
-                    <div
-                        id="fileTypeIcon"
-                        class="file-icon"
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="removeFile"
+                        class="remove-file"
+                        aria-label="Remove selected file"
                     >
-                        FILE
-                    </div>
-
-
-                    <div>
-
-                        <div
-                            id="fileName"
-                            class="file-name"
-                        >
-                        </div>
-
-
-                        <div
-                            id="fileSize"
-                            class="file-size"
-                        >
-                        </div>
-
-                    </div>
+                        ×
+                    </button>
 
                 </div>
 
 
+                <!-- =================================
+                     VALIDATION MESSAGE
+                ================================== -->
+
+                <div
+                    id="validationMessage"
+                    class="validation-message"
+                    style="display: none;"
+                >
+                </div>
+
+
+                <!-- =================================
+                     ANALYZE BUTTON
+                ================================== -->
+
                 <button
                     type="button"
-                    id="removeFile"
-                    class="remove-file"
+                    id="analyzeButton"
+                    class="analyze-button"
+                    disabled
                 >
 
-                    Remove
+                    <span id="analyzeText">
+                        Analyze Dataset
+                    </span>
+
+                    <span
+                        id="analyzeIcon"
+                        class="analyze-icon"
+                    >
+                        →
+                    </span>
 
                 </button>
 
-            </div>
+
+                <!-- =================================
+                     DATASET REQUIREMENTS
+                ================================== -->
+
+                <div class="requirements-card">
+
+                    <div class="requirements-title">
+                        Dataset requirements
+                    </div>
 
 
-            <!-- =========================================
-                 VALIDATION MESSAGE
-            ========================================== -->
-
-            <div
-                id="validationMessage"
-                class="validation-message"
-                style="display: none;"
-            >
-            </div>
+                    <p>
+                        Your CSV should contain the
+                        following placement-related columns:
+                    </p>
 
 
-            <!-- =========================================
-                 ANALYZE BUTTON
-            ========================================== -->
+                    <div class="column-list">
 
-            <button
-                type="button"
-                id="analyzeButton"
-                class="analyze-button"
-                disabled
-            >
+                        <span>student_id</span>
+                        <span>gender</span>
+                        <span>age</span>
+                        <span>degree</span>
+                        <span>branch</span>
+                        <span>cgpa</span>
+                        <span>backlogs</span>
+                        <span>internships</span>
+                        <span>certifications</span>
+                        <span>coding_skills</span>
+                        <span>communication_skills</span>
+                        <span>aptitude_score</span>
+                        <span>projects</span>
+                        <span>placed</span>
+                        <span>company_type</span>
+                        <span>package_lpa</span>
 
-                Analyze Dataset
-
-                <span>→</span>
-
-            </button>
+                    </div>
 
 
-            <!-- =========================================
-                 TEMPLATE
-            ========================================== -->
+                    <p class="required-note">
 
-            <p class="template-text">
+                        <strong>Core analysis columns:</strong>
+                        branch, cgpa, internships,
+                        placed, package_lpa
 
-                Recommended columns:
+                    </p>
 
-                <br>
+                </div>
 
-                student_id, gender, age, degree, branch,
-                cgpa, backlogs, internships, certifications,
-                coding_skills, communication_skills,
-                aptitude_score, projects, placed,
-                company_type, package_lpa
 
-            </p>
+                <!-- =================================
+                     TEMPLATE HELP
+                ================================== -->
 
-        </section>
+                <div class="template-help">
+
+                    <p>
+                        Don't have a dataset?
+                    </p>
+
+                    <button
+                        type="button"
+                        id="templateButton"
+                        class="template-link"
+                    >
+                        View required format
+                    </button>
+
+                </div>
+
+            </section>
+
+        </div>
 
     </main>
 
@@ -220,4 +277,3 @@
 </body>
 
 </html>
-

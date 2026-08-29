@@ -1,7 +1,6 @@
 // =========================================
 // CAMPUSPULSE
 // Upload Page JavaScript
-// Supports CSV + XLSX
 // =========================================
 
 
@@ -27,17 +26,33 @@ const fileName =
 const fileSize =
     document.getElementById("fileSize");
 
-const fileTypeIcon =
-    document.getElementById("fileTypeIcon");
-
 const removeFile =
     document.getElementById("removeFile");
 
 const validationMessage =
-    document.getElementById("validationMessage");
+    document.getElementById(
+        "validationMessage"
+    );
 
 const analyzeButton =
-    document.getElementById("analyzeButton");
+    document.getElementById(
+        "analyzeButton"
+    );
+
+const analyzeText =
+    document.getElementById(
+        "analyzeText"
+    );
+
+const analyzeIcon =
+    document.getElementById(
+        "analyzeIcon"
+    );
+
+const templateButton =
+    document.getElementById(
+        "templateButton"
+    );
 
 
 // =========================================
@@ -45,97 +60,61 @@ const analyzeButton =
 // =========================================
 
 const MAX_FILE_SIZE =
-    10 * 1024 * 1024; // 10 MB
-
-
-const BACKEND_URL =
-    "http://127.0.0.1:5000";
+    10 * 1024 * 1024;
 
 
 // =========================================
-// CHECK ELEMENTS
+// OPEN FILE SELECTOR
 // =========================================
 
-console.log("CampusPulse upload.js loaded.");
+browseButton.addEventListener(
+    "click",
+    event => {
 
-console.log("dropZone:", dropZone);
-console.log("browseButton:", browseButton);
-console.log("fileInput:", fileInput);
-console.log("analyzeButton:", analyzeButton);
+        event.stopPropagation();
 
+        fileInput.click();
 
-// =========================================
-// INITIAL STATE
-// =========================================
-
-if (analyzeButton) {
-    analyzeButton.disabled = true;
-}
-
-if (selectedFile) {
-    selectedFile.style.display = "none";
-}
-
-
-// =========================================
-// BROWSE BUTTON
-// =========================================
-
-browseButton.addEventListener("click", function (event) {
-
-    event.preventDefault();
-
-    event.stopPropagation();
-
-    console.log("Browse Files clicked.");
-
-    fileInput.click();
-
-});
-
-
-// =========================================
-// DROP ZONE CLICK
-// =========================================
-
-dropZone.addEventListener("click", function (event) {
-
-    // Don't trigger twice when Browse Files is clicked
-
-    if (event.target === browseButton) {
-        return;
     }
-
-    console.log("Drop zone clicked.");
-
-    fileInput.click();
-
-});
+);
 
 
-// =========================================
-// FILE INPUT CHANGE
-// =========================================
+dropZone.addEventListener(
+    "click",
+    event => {
 
-fileInput.addEventListener("change", function () {
+        if (
+            event.target === browseButton
+        ) {
+            return;
+        }
 
-    console.log("File input changed.");
+        fileInput.click();
 
-    const file =
-        fileInput.files[0];
-
-    if (!file) {
-        return;
     }
+);
 
-    console.log(
-        "Selected file:",
-        file.name
-    );
 
-    processFile(file);
+// =========================================
+// FILE SELECTED
+// =========================================
 
-});
+fileInput.addEventListener(
+    "change",
+    () => {
+
+        const file =
+            fileInput.files[0];
+
+
+        if (file) {
+
+            processFile(file);
+
+        }
+
+    }
+);
 
 
 // =========================================
@@ -144,11 +123,13 @@ fileInput.addEventListener("change", function () {
 
 dropZone.addEventListener(
     "dragover",
-    function (event) {
+    event => {
 
         event.preventDefault();
 
-        dropZone.classList.add("drag-over");
+        dropZone.classList.add(
+            "drag-over"
+        );
 
     }
 );
@@ -160,9 +141,11 @@ dropZone.addEventListener(
 
 dropZone.addEventListener(
     "dragleave",
-    function () {
+    () => {
 
-        dropZone.classList.remove("drag-over");
+        dropZone.classList.remove(
+            "drag-over"
+        );
 
     }
 );
@@ -174,53 +157,24 @@ dropZone.addEventListener(
 
 dropZone.addEventListener(
     "drop",
-    function (event) {
+    event => {
 
         event.preventDefault();
 
-        dropZone.classList.remove("drag-over");
+        dropZone.classList.remove(
+            "drag-over"
+        );
 
 
         const file =
             event.dataTransfer.files[0];
 
 
-        if (!file) {
-            return;
-        }
+        if (file) {
 
-
-        console.log(
-            "Dropped file:",
-            file.name
-        );
-
-
-        // Put dropped file into file input
-
-        try {
-
-            const dataTransfer =
-                new DataTransfer();
-
-            dataTransfer.items.add(file);
-
-            fileInput.files =
-                dataTransfer.files;
+            processFile(file);
 
         }
-
-        catch (error) {
-
-            console.warn(
-                "Could not update file input:",
-                error
-            );
-
-        }
-
-
-        processFile(file);
 
     }
 );
@@ -236,31 +190,22 @@ function processFile(file) {
 
 
     // -----------------------------------------
-    // FILE EXTENSION
+    // FILE TYPE
     // -----------------------------------------
 
-    const fileNameLower =
-        file.name.toLowerCase();
+    const isCsv =
+        file.name
+            .toLowerCase()
+            .endsWith(".csv");
 
 
-    const isCSV =
-        fileNameLower.endsWith(".csv");
-
-
-    const isXLSX =
-        fileNameLower.endsWith(".xlsx");
-
-
-    // -----------------------------------------
-    // CHECK FILE TYPE
-    // -----------------------------------------
-
-    if (!isCSV && !isXLSX) {
+    if (!isCsv) {
 
         showValidation(
-            "Invalid file type. Please upload a CSV or XLSX file.",
+            "Invalid file type. Please upload a CSV (.csv) file.",
             "error"
         );
+
 
         resetFile();
 
@@ -270,15 +215,19 @@ function processFile(file) {
 
 
     // -----------------------------------------
-    // CHECK FILE SIZE
+    // FILE SIZE
     // -----------------------------------------
 
-    if (file.size > MAX_FILE_SIZE) {
+    if (
+        file.size >
+        MAX_FILE_SIZE
+    ) {
 
         showValidation(
-            "File is too large. Maximum allowed size is 10 MB.",
+            "File is too large. The maximum allowed size is 10 MB.",
             "error"
         );
+
 
         resetFile();
 
@@ -288,59 +237,26 @@ function processFile(file) {
 
 
     // -----------------------------------------
-    // DISPLAY FILE NAME
+    // DISPLAY FILE
     // -----------------------------------------
 
     fileName.textContent =
         file.name;
 
 
-    // -----------------------------------------
-    // DISPLAY FILE SIZE
-    // -----------------------------------------
-
     fileSize.textContent =
-        formatFileSize(file.size);
+        formatFileSize(
+            file.size
+        );
 
-
-    // -----------------------------------------
-    // DISPLAY FILE TYPE
-    // -----------------------------------------
-
-    if (isCSV) {
-
-        fileTypeIcon.textContent =
-            "CSV";
-
-    }
-
-    else if (isXLSX) {
-
-        fileTypeIcon.textContent =
-            "XLSX";
-
-    }
-
-
-    // -----------------------------------------
-    // SHOW SELECTED FILE
-    // -----------------------------------------
 
     selectedFile.style.display =
         "flex";
 
 
-    // -----------------------------------------
-    // ENABLE ANALYZE
-    // -----------------------------------------
-
     analyzeButton.disabled =
         false;
 
-
-    // -----------------------------------------
-    // SUCCESS MESSAGE
-    // -----------------------------------------
 
     showValidation(
         "File selected successfully. Ready for analysis.",
@@ -349,8 +265,16 @@ function processFile(file) {
 
 
     console.log(
-        "File processed successfully:",
+        "Selected file:",
         file.name
+    );
+
+
+    console.log(
+        "File size:",
+        formatFileSize(
+            file.size
+        )
     );
 
 }
@@ -362,9 +286,7 @@ function processFile(file) {
 
 removeFile.addEventListener(
     "click",
-    function (event) {
-
-        event.preventDefault();
+    event => {
 
         event.stopPropagation();
 
@@ -373,10 +295,6 @@ removeFile.addEventListener(
     }
 );
 
-
-// =========================================
-// RESET FILE
-// =========================================
 
 function resetFile() {
 
@@ -388,24 +306,11 @@ function resetFile() {
         "none";
 
 
-    fileName.textContent =
-        "";
-
-
-    fileSize.textContent =
-        "";
-
-
-    fileTypeIcon.textContent =
-        "FILE";
-
-
     analyzeButton.disabled =
         true;
 
 
-    analyzeButton.innerHTML =
-        'Analyze Dataset <span>→</span>';
+    setAnalyzeButtonNormal();
 
 
     clearValidation();
@@ -414,7 +319,7 @@ function resetFile() {
 
 
 // =========================================
-// SHOW VALIDATION
+// VALIDATION MESSAGE
 // =========================================
 
 function showValidation(
@@ -427,7 +332,7 @@ function showValidation(
 
 
     validationMessage.className =
-        "validation-message " + type;
+        `validation-message ${type}`;
 
 
     validationMessage.style.display =
@@ -435,10 +340,6 @@ function showValidation(
 
 }
 
-
-// =========================================
-// CLEAR VALIDATION
-// =========================================
 
 function clearValidation() {
 
@@ -457,7 +358,7 @@ function clearValidation() {
 
 
 // =========================================
-// FORMAT FILE SIZE
+// FILE SIZE
 // =========================================
 
 function formatFileSize(bytes) {
@@ -469,7 +370,10 @@ function formatFileSize(bytes) {
     }
 
 
-    if (bytes < 1024 * 1024) {
+    if (
+        bytes <
+        1024 * 1024
+    ) {
 
         return `${(
             bytes / 1024
@@ -492,20 +396,20 @@ function formatFileSize(bytes) {
 
 analyzeButton.addEventListener(
     "click",
-    async function () {
+    async () => {
 
         const file =
             fileInput.files[0];
 
 
-        // -----------------------------------------
+        // -------------------------------------
         // CHECK FILE
-        // -----------------------------------------
+        // -------------------------------------
 
         if (!file) {
 
             showValidation(
-                "Please select a CSV or XLSX file first.",
+                "Please select a CSV file first.",
                 "error"
             );
 
@@ -514,42 +418,37 @@ analyzeButton.addEventListener(
         }
 
 
+        // -------------------------------------
+        // LOADING STATE
+        // -------------------------------------
+
+        setAnalyzeButtonLoading();
+
+
+        clearValidation();
+
+
         console.log(
             "================================="
         );
 
+
         console.log(
-            "ANALYZE BUTTON CLICKED"
+            "CampusPulse analysis started"
         );
+
 
         console.log(
             "File:",
             file.name
         );
 
-        console.log(
-            "Size:",
-            file.size
-        );
-
-
-        // -----------------------------------------
-        // DISABLE BUTTON
-        // -----------------------------------------
-
-        analyzeButton.disabled =
-            true;
-
-
-        analyzeButton.innerHTML =
-            'Analyzing... <span>⏳</span>';
-
 
         try {
 
-            // -----------------------------------------
-            // CREATE FORM DATA
-            // -----------------------------------------
+            // -------------------------------
+            // FORM DATA
+            // -------------------------------
 
             const formData =
                 new FormData();
@@ -557,23 +456,22 @@ analyzeButton.addEventListener(
 
             formData.append(
                 "file",
-                file,
-                file.name
+                file
             );
 
 
             console.log(
-                "Sending file to Flask..."
+                "Sending dataset to Flask..."
             );
 
 
-            // -----------------------------------------
-            // SEND FILE TO FLASK
-            // -----------------------------------------
+            // -------------------------------
+            // REQUEST
+            // -------------------------------
 
             const response =
                 await fetch(
-                    `${BACKEND_URL}/analyze`,
+                    "http://127.0.0.1:5000/analyze",
                     {
                         method: "POST",
                         body: formData
@@ -582,28 +480,41 @@ analyzeButton.addEventListener(
 
 
             console.log(
-                "Backend response status:",
+                "Backend status:",
                 response.status
             );
 
 
-            // -----------------------------------------
-            // READ JSON
-            // -----------------------------------------
+            // -------------------------------
+            // RESPONSE
+            // -------------------------------
 
-            const result =
-                await response.json();
+            let result;
+
+
+            try {
+
+                result =
+                    await response.json();
+
+            } catch (jsonError) {
+
+                throw new Error(
+                    "The backend returned an invalid response."
+                );
+
+            }
 
 
             console.log(
-                "Backend response:",
+                "Backend result:",
                 result
             );
 
 
-            // -----------------------------------------
-            // CHECK RESPONSE
-            // -----------------------------------------
+            // -------------------------------
+            // BACKEND ERROR
+            // -------------------------------
 
             if (!response.ok) {
 
@@ -615,13 +526,19 @@ analyzeButton.addEventListener(
             }
 
 
-            // -----------------------------------------
-            // SAVE ANALYSIS
-            // -----------------------------------------
+            // -------------------------------
+            // SUCCESS
+            // -------------------------------
 
             localStorage.setItem(
                 "campusPulseAnalysis",
                 JSON.stringify(result)
+            );
+
+
+            localStorage.setItem(
+                "campusPulseFilename",
+                file.name
             );
 
 
@@ -630,28 +547,24 @@ analyzeButton.addEventListener(
             );
 
 
-            // -----------------------------------------
-            // SUCCESS
-            // -----------------------------------------
-
             showValidation(
-                "Analysis completed successfully!",
+                "Analysis completed successfully! Opening dashboard...",
                 "success"
             );
 
 
-            // -----------------------------------------
-            // DASHBOARD
-            // -----------------------------------------
+            // -------------------------------
+            // GO DASHBOARD
+            // -------------------------------
 
             setTimeout(
-                function () {
+                () => {
 
                     window.location.href =
                         "dashboard.html";
 
                 },
-                500
+                700
             );
 
         }
@@ -660,26 +573,124 @@ analyzeButton.addEventListener(
         catch (error) {
 
             console.error(
-                "ANALYSIS ERROR:",
+                "CAMPUSPULSE ANALYSIS ERROR:",
                 error
             );
 
 
+            let message =
+                error.message;
+
+
+            // ---------------------------------
+            // CONNECTION ERROR
+            // ---------------------------------
+
+            if (
+                error.name ===
+                "TypeError" &&
+                (
+                    message.includes(
+                        "fetch"
+                    ) ||
+                    message.includes(
+                        "Failed"
+                    )
+                )
+            ) {
+
+                message =
+                    "Could not connect to the CampusPulse backend. Make sure Flask is running on port 5000.";
+
+            }
+
+
             showValidation(
                 "Analysis failed: " +
-                error.message,
+                message,
                 "error"
             );
 
 
-            analyzeButton.disabled =
-                false;
-
-
-            analyzeButton.innerHTML =
-                'Analyze Dataset <span>→</span>';
+            setAnalyzeButtonNormal();
 
         }
 
     }
+);
+
+
+// =========================================
+// BUTTON STATES
+// =========================================
+
+function setAnalyzeButtonLoading() {
+
+    analyzeButton.disabled =
+        true;
+
+
+    analyzeText.textContent =
+        "Analyzing dataset";
+
+
+    analyzeIcon.textContent =
+        "⏳";
+
+}
+
+
+function setAnalyzeButtonNormal() {
+
+    analyzeButton.disabled =
+        !fileInput.files[0];
+
+
+    analyzeText.textContent =
+        "Analyze Dataset";
+
+
+    analyzeIcon.textContent =
+        "→";
+
+}
+
+
+// =========================================
+// TEMPLATE BUTTON
+// =========================================
+
+templateButton.addEventListener(
+    "click",
+    () => {
+
+        const requirements =
+            document.querySelector(
+                ".requirements-card"
+            );
+
+
+        if (!requirements) {
+            return;
+        }
+
+
+        requirements.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+    }
+);
+
+
+// =========================================
+// INITIAL STATE
+// =========================================
+
+resetFile();
+
+
+console.log(
+    "CampusPulse upload page loaded."
 );
