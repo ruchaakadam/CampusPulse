@@ -93,3 +93,47 @@ Calculate Statistics
 Generate Visualizations
       ↓
 Display Insights
+
+# 📂 CSV Dataset Requirements
+
+CampusPulse currently accepts student placement datasets in:
+
+**CSV (`.csv`) format**
+
+Maximum file size:
+
+**10 MB**
+
+## Required Columns
+
+The uploaded CSV should contain these columns:
+
+| Column | Required | Description |
+|---|:---:|---|
+| `student_id` | ✅ | Unique identifier for each student |
+| `gender` | ✅ | Student gender |
+| `age` | ✅ | Student age |
+| `degree` | ✅ | Degree/program |
+| `branch` | ✅ | Academic branch |
+| `cgpa` | ✅ | Student CGPA |
+| `backlogs` | ✅ | Number of academic backlogs |
+| `internships` | ✅ | Internship experience |
+| `certifications` | ✅ | Certifications |
+| `coding_skills` | ✅ | Coding skill score/level |
+| `communication_skills` | ✅ | Communication skill score/level |
+| `aptitude_score` | ✅ | Aptitude assessment score |
+| `projects` | ✅ | Number/details of projects |
+| `placed` | ✅ | Placement status (`0` = Not Placed, `1` = Placed) |
+| `company_type` | ✅ | Type/category of recruiting company |
+| `package_lpa` | ✅ | Salary package in Lakhs Per Annum |
+
+## Core Analysis Fields
+
+The following fields are particularly important for the current CampusPulse analysis:
+
+```text
+branch
+cgpa
+internships
+placed
+package_lpa
